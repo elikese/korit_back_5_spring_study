@@ -18,7 +18,7 @@ public class StudentController{
 
     @GetMapping("/student")
     public ResponseEntity<?> getStudentInfo(@ModelAttribute StudentReqDto studentReqDto) {
-        // ResponseEntity -> 상태코드, 헤더설정 등 한번에 가능(메서드 체인)
+        // ResponseEntity -> 상태코드, 헤더설정 등 한번에 가능(메서드 체인: bodybuilder로 변환되었다가 body()메서드로 인해 ResponseEntity 객체로 반환 됨)
         return ResponseEntity.ok().body(studentReqDto.toRespDto());
     }
 }
