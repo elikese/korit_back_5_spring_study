@@ -6,6 +6,9 @@
 </head>
 <body>
     <h1>hello spring boot!</h1>
-    <div th:text="${name}"></div>
+    <!--a.name이 변수 직접접근이 아님(Getter가 있어야 됨)-->
+    <div th:text="${a.name1}"></div>
+    <div th:text="${a.name2}"></div>
+    <div th:text="${a.name3}"></div>
 </body>
 </html>

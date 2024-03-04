@@ -1,5 +1,6 @@
 package com.study.mvc.controller;
 
+import com.study.mvc.model.HelloModel;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,17 +13,15 @@ import java.util.Map;
 @Controller
 public class StudyController {
 
-    // MVC 패턴
+    //MVC 패턴
     @GetMapping("/hello")
-    public ModelAndView helloPage() {
-        Map<String, Object> model = new HashMap<>();
-        model.put("name1", "피카츄");
-        model.put("name2", "라이츄");
-        model.put("name3", "파이리");
-        return new ModelAndView("hello", model);
+    public String helloPage(Model model) {
+        HelloModel helloModel = HelloModel.builder().name1("피카츄").name2("라이츄").name3("파이리").build();
+        model.addAttribute("a",helloModel);
+        return "hello";
     }
 
-    // REST
+    //REST
     @GetMapping("/test")
     @ResponseBody // @RespnseBody가 붙으면, viewname을 리턴하는게 아니고, data만 리턴해줌 -> CSR 아님.
     public Map<String, Object> testPage(Model model) {
@@ -32,5 +31,4 @@ public class StudyController {
         testObj.put("피카츄2", model);
         return testObj;
     }
-
 }
