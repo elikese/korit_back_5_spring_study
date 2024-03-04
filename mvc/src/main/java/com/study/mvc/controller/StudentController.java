@@ -9,6 +9,8 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,21 +38,22 @@ public class StudentController{
         studentList.add(student);
 
         ObjectMapper newStudentList = new ObjectMapper();
+
         String newStudents = newStudentList.writeValueAsString(studentList);
+        String EncodedJsonStudents = URLEncoder.encode(newStudents, StandardCharsets.UTF_8);
 
         ResponseCookie responseCookie = ResponseCookie
-                .from("students", newStudents)
+                .from("students", EncodedJsonStudents)
                 .httpOnly(true)
                 .secure(true)
                 .path("/")
-                .maxAge(60)
+                .maxAge(600)
                 .build();
 
         return ResponseEntity
                 .created(null)
                 .header(HttpHeaders.SET_COOKIE,responseCookie.toString())
                 .body(newStudents);
-
     }
 
 
