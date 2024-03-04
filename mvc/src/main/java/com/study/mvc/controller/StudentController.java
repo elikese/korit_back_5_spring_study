@@ -1,10 +1,15 @@
 package com.study.mvc.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.study.mvc.dto.StudentReqDto;
 import com.study.mvc.entity.Student;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -13,9 +18,39 @@ import java.util.Optional;
 public class StudentController{
 
     @PostMapping("/student")
-    public ResponseEntity<?> addStudent() {
-        System.out.println();
-        return ResponseEntity.created(null).body("");
+    // @RequestBody & @ResponseBody : 자바 객체 <-> JSON 변환용으로 사용함
+    public ResponseEntity<?> addStudent(@CookieValue(required = false) String students, @RequestBody Student student) throws JsonProcessingException {
+
+        int lastId = 0;
+        List<Student> studentList = new ArrayList<>();
+
+        if(students != null) {
+            if(!students.isBlank()) {
+            ObjectMapper studentsCookie = new ObjectMapper();
+            studentList = studentsCookie.readValue(students,List.class);
+            lastId = studentList.get(studentList.size() - 1).getStudentId();
+            }
+        }
+
+        student.setStudentId(lastId + 1);
+        studentList.add(student);
+
+        ObjectMapper newStudentList = new ObjectMapper();
+        String newStudents = newStudentList.writeValueAsString(studentList);
+
+        ResponseCookie responseCookie = ResponseCookie
+                .from("students", newStudents)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(60)
+                .build();
+
+        return ResponseEntity
+                .created(null)
+                .header(HttpHeaders.SET_COOKIE,responseCookie.toString())
+                .body(newStudents);
+
     }
 
 
