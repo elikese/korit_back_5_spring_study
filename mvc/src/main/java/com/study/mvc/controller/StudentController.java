@@ -11,49 +11,46 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 public class StudentController{
 
     @PostMapping("/student")
     // @RequestBody & @ResponseBody : 자바 객체 <-> JSON 변환용으로 사용함
+    // dispatcher가 @CookieValue 있으면 알아서 디코딩해서 꺼내옴
     public ResponseEntity<?> addStudent(@CookieValue(required = false) String students, @RequestBody Student student) throws JsonProcessingException {
 
-        int lastId = 0;
+        ObjectMapper objectMapper = new ObjectMapper();
         List<Student> studentList = new ArrayList<>();
+        int lastId = 0;
 
-        if(students != null) {
-            if(!students.isBlank()) {
-            ObjectMapper studentsCookie = new ObjectMapper();
-            studentList = studentsCookie.readValue(students,List.class);
-            lastId = studentList.get(studentList.size() - 1).getStudentId();
+        if(students != null && !students.isBlank()) {
+            // MessageConverter 역할하는 Jackson 라이브러리에 있는 ObjectMapper임
+            for(Object object : objectMapper.readValue(students, List.class)){
+                Map<String, Object> studentMap = (Map<String, Object>) object;
+                studentList.add(objectMapper.convertValue(studentMap, Student.class));
             }
+            lastId = studentList.get(studentList.size() - 1).getStudentId();
         }
 
         student.setStudentId(lastId + 1);
         studentList.add(student);
 
-        ObjectMapper newStudentList = new ObjectMapper();
-
-        String newStudents = newStudentList.writeValueAsString(studentList);
-        String EncodedJsonStudents = URLEncoder.encode(newStudents, StandardCharsets.UTF_8);
+        String studentListJson = objectMapper.writeValueAsString(studentList);
 
         ResponseCookie responseCookie = ResponseCookie
-                .from("students", EncodedJsonStudents)
+                .from("students", URLEncoder.encode(studentListJson, StandardCharsets.UTF_8))
                 .httpOnly(true)
                 .secure(true)
-                .path("/")
-                .maxAge(600)
+                .path("/") // "/auth" 라고 지정하면 localhost:8080/auth -> 이후로만 쿠키접근가능함
+                .maxAge(60)
                 .build();
 
         return ResponseEntity
-                .created(null)
+                .created(null) // 201응답
                 .header(HttpHeaders.SET_COOKIE,responseCookie.toString())
-                .body(newStudents);
+                .body(studentListJson);
     }
 
 
