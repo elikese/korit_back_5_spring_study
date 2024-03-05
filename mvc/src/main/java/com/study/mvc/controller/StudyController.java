@@ -17,7 +17,7 @@ public class StudyController {
     @GetMapping("/hello")
     public String helloPage(Model model) {
         HelloModel helloModel = HelloModel.builder().name1("피카츄").name2("라이츄").name3("파이리").build();
-        model.addAttribute("a",helloModel);
+        model.addAttribute("a", helloModel);
         return "hello";
     }
 

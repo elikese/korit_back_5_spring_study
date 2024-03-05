@@ -14,7 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @RestController
-public class StudentController{
+public class StudentController {
 
     @PostMapping("/student")
     // @RequestBody & @ResponseBody : 자바 객체 <-> JSON 변환용으로 사용함
@@ -25,9 +25,9 @@ public class StudentController{
         List<Student> studentList = new ArrayList<>();
         int lastId = 0;
 
-        if(students != null && !students.isBlank()) {
+        if (students != null && !students.isBlank()) {
             // MessageConverter 역할하는 Jackson 라이브러리에 있는 ObjectMapper임
-            for(Object object : objectMapper.readValue(students, List.class)){
+            for (Object object : objectMapper.readValue(students, List.class)) {
                 Map<String, Object> studentMap = (Map<String, Object>) object;
                 studentList.add(objectMapper.convertValue(studentMap, Student.class));
             }
@@ -49,11 +49,9 @@ public class StudentController{
 
         return ResponseEntity
                 .created(null) // 201응답
-                .header(HttpHeaders.SET_COOKIE,responseCookie.toString())
+                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
                 .body(studentListJson);
     }
-
-
 
     //    파라미터로 받아야하는 객체 생성을 요청 받은 시점에 dispatcher가 수행함 (bean 등록이 아님)
     //    @GetMapping("/student1")
@@ -78,9 +76,9 @@ public class StudentController{
         );
 
         Optional<Student> optionalStudent =
-                studentList.stream().filter(student -> student.getStudentId()==id).findFirst();
-        if(optionalStudent.isEmpty()) {
-            return ResponseEntity.ok().body(Map.of("errorMessage","존재하지 않는 ID입니다"));
+                studentList.stream().filter(student -> student.getStudentId() == id).findFirst();
+        if (optionalStudent.isEmpty()) {
+            return ResponseEntity.ok().body(Map.of("errorMessage", "존재하지 않는 ID입니다"));
         } else {
             Student findStudent = optionalStudent.get();
             return ResponseEntity.ok().body(findStudent);
