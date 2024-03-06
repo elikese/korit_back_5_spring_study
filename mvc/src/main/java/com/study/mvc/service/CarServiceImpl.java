@@ -1,5 +1,6 @@
 package com.study.mvc.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.study.mvc.repository.CarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class CarServiceImpl implements CarService{
 
+    @Autowired
+    private ObjectMapper objectMapper;
     final String componentName = "a";
 
     @Autowired
