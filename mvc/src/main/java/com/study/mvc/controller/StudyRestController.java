@@ -5,9 +5,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-
-
 @RestController // 모든 메서드에 @ResponseBody 어노테이션을 단 것과 같다.
 public class StudyRestController {
 
