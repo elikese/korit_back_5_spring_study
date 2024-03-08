@@ -94,10 +94,13 @@
     >
         update study_tb
         set
-            case when nullif(#{name}, '') is not null then
-                name = #{name}
-            when nullif(#{age}, 0) is not null then
-                age = #{age}
+            <if test="name != null and !name.equals('')">
+                name = #{name},
+            </if>
+            <if test="age != 0">
+                age = #{age},
+            </if>
+                create_date = create_date
         where
         id = #{id}
     </update>

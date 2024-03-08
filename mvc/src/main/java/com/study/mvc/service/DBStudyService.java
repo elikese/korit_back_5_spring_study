@@ -61,4 +61,13 @@ public class DBStudyService {
     public int deleteStudyById(int id) {
         return dbStudyRepository.deleteById(id);
     }
+
+    public int putById(int id, DBStudyReqDto reqDto) {
+        return dbStudyRepository.putById(reqDto.toEntity(id));
+    }
+
+    public int patchById(int id, DBStudyReqDto reqDto) {
+        return dbStudyRepository.patchById((reqDto.toEntity(id)));
+    }
+
 }

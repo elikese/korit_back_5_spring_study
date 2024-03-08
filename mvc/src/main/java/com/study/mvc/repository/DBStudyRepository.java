@@ -14,6 +14,6 @@ public interface DBStudyRepository{
     List<Study> findStudyAll();
 
     int deleteById(int id);
-    int pubById(Study study);
+    int putById(Study study);
     int patchById(Study study);
 }
