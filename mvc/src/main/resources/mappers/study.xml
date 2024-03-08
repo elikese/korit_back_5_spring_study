@@ -56,4 +56,50 @@
             name = #{name}
     </select>
 
+
+    <select
+            id="findStudyAll"
+            resultMap="StudyResultMap"
+    >
+        select
+           *
+        from
+           study_tb
+    </select>
+
+    <delete
+            id="deleteById"
+            parameterType="Integer"
+    >
+        delete
+        from
+            study_tb
+        where
+            id = #{id}
+    </delete>
+
+    <update id="putById"
+            parameterType="com.study.mvc.entity.Study"
+    >
+        update study_tb
+        set
+            name = #{name},
+            age = #{age}
+        where
+            id = #{id}
+    </update>
+
+    <update id="patchById"
+            parameterType="com.study.mvc.entity.Study"
+    >
+        update study_tb
+        set
+            case when nullif(#{name}, '') is not null then
+                name = #{name}
+            when nullif(#{age}, 0) is not null then
+                age = #{age}
+        where
+        id = #{id}
+    </update>
+
 </mapper>
