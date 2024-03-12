@@ -69,7 +69,7 @@
 
     <delete
             id="deleteById"
-            parameterType="Integer"
+            parameterType="com.study.mvc.entity.Study"
     >
         delete
         from

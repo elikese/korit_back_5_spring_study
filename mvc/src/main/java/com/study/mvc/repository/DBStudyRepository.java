@@ -8,11 +8,9 @@ import java.util.List;
 public interface DBStudyRepository{
     int save(Study study);
     Study findStudyById(int id);
-
     // name이 db에서 unique 값으로 설정되어있어서 가능
     Study findStudyByName(String name);
     List<Study> findStudyAll();
-
     int deleteById(int id);
     int putById(Study study);
     int patchById(Study study);
